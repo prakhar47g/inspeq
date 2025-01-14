@@ -1,0 +1,21 @@
+# KServe InferenceService configuration for custom model with logging
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: "kserve-custom-model-logger" # Name of the inference service
+spec:
+  predictor:
+    logger:
+      mode: all # Log both request and response
+      url: http://promtail.default:3101/loki/api/v1/push # Promtail endpoint for logging
+    containers:
+    - image: prakhar11509/inspeq-kserve:amd64 # Custom model container image
+      resources:
+        requests: # Minimum resource requirements
+          memory: "1024Mi"
+          cpu: "250m"
+        limits: # Maximum resource limits
+          memory: "1024Mi"
+          cpu: "500m"

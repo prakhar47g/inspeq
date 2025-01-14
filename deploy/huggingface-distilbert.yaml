@@ -1,0 +1,28 @@
+# KServe InferenceService configuration for HuggingFace DistilBERT model
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: huggingface-distilbert # Name of the inference service
+  annotations:
+    serving.kserve.io/enable-prometheus-scraping: "true" # Enable Prometheus metrics scraping
+spec:
+  predictor:
+    scaleTarget: 10 # each pod can handle 10 inflight reqs before scaling out
+    scaleMetric: concurrency
+    model:
+      modelFormat:
+        name: huggingface # Use HuggingFace model format
+      protocolVersion: v2 # Use KServe v2 protocol
+      args:
+        - --enable_docs_url=True # Enable OpenAPI documentation
+        - --model_name=distilbert # Model name for API
+        - --model_id=distilbert/distilbert-base-uncased-finetuned-sst-2-english # HuggingFace model ID
+      resources:
+        limits: # Maximum resource limits
+          cpu: "400m"
+          memory: 1Gi
+          # nvidia.com/gpu: "1" # Uncomment if GPU nodes are available in cluster
+        requests: # Minimum resource requirements  
+          cpu: "400m"
+          memory: 1Gi
+          # nvidia.com/gpu: "1"

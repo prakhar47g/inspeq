@@ -1,0 +1,3 @@
+POST http://huggingface-distilbert.default.139.59.55.131.sslip.io/v1/models/distilbert:predict
+Content-Type: application/json
+@./payload.json
